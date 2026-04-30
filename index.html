@@ -13,13 +13,22 @@
     .card { background: #121a33; border: 1px solid #263453; border-radius: 16px; padding: 14px; margin: 18px 0; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
     .chart { width: 100%; height: 560px; }
     .meta { color: #aab6d3; font-size: 14px; line-height: 1.45; }
+    .controls { display: grid; gap: 8px; background: #121a33; border: 1px solid #263453; border-radius: 16px; padding: 14px; margin: 18px 0; }
+    .controls label { font-weight: 650; }
+    .controls input[type=range] { width: 100%; }
+    .pill { display: inline-block; background: #203052; border: 1px solid #33476f; color: #e8eefc; padding: 4px 9px; border-radius: 999px; }
     a { color: #8ab4ff; }
   </style>
 </head>
 <body>
 <main>
   <h1>AI Bucket Indexes</h1>
-  <div class="sub">Equal-weighted category indexes, indexed to $100 over the trailing two years. Data refreshes daily from Yahoo Finance.</div>
+  <div class="sub">Equal-weighted category indexes. Use the slider to choose the rebasing date; every visible line resets to $100 on that date. Data refreshes daily from Yahoo Finance.</div>
+  <div class="controls">
+    <label for="startSlider">Start / rebasing date: <span id="startDate" class="pill">Loading…</span></label>
+    <input id="startSlider" type="range" min="0" max="0" value="0" step="1" disabled />
+    <div class="meta">Tip: move the slider right to compare returns from a more recent date. The chart automatically rebases all buckets to $100 at the selected start date.</div>
+  </div>
   <div class="card"><div id="beneficiary" class="chart"></div></div>
   <div class="card"><div id="disrupted" class="chart"></div></div>
   <div class="card meta" id="meta">Loading metadata…</div>
@@ -39,24 +48,69 @@ function parseCSV(text) {
   const headers = rows.shift();
   return rows.filter(r => r.length === headers.length).map(r => Object.fromEntries(headers.map((h,i)=>[h,r[i]])));
 }
-function plot(div, data, category, title) {
+let allRows = [];
+let metaInfo = {};
+
+function rebasedRows(data, startIndex) {
+  const cols = Object.keys(data[0]).filter(c => c !== 'Date');
+  const base = {};
+  for (const c of cols) {
+    for (let i = startIndex; i < data.length; i++) {
+      const v = Number(data[i][c]);
+      if (Number.isFinite(v) && v > 0) { base[c] = v; break; }
+    }
+  }
+  return data.slice(startIndex).map(r => {
+    const out = { Date: r.Date };
+    for (const c of cols) {
+      const v = Number(r[c]);
+      out[c] = Number.isFinite(v) && base[c] ? (v / base[c]) * 100 : null;
+    }
+    return out;
+  });
+}
+
+function tracesFor(data, category) {
   const cols = Object.keys(data[0]).filter(c => c.includes(`| ${category} |`));
-  const traces = cols.map(c => ({ x: data.map(r => r.Date), y: data.map(r => Number(r[c]) || null), mode: 'lines', name: c.replace(/^V2G\d+ \| /,''), hovertemplate: '%{x}<br>%{fullData.name}: $%{y:.1f}<extra></extra>' }));
-  Plotly.newPlot(div, traces, {
+  return cols.map(c => ({
+    x: data.map(r => r.Date),
+    y: data.map(r => r[c]),
+    mode: 'lines',
+    name: c.replace(/^V2G\d+ \| /,''),
+    hovertemplate: '%{x}<br>%{fullData.name}: $%{y:.1f}<extra></extra>'
+  }));
+}
+
+function layout(title) {
+  return {
     title: { text: title, font: { color: '#e8eefc' } },
     paper_bgcolor: '#121a33', plot_bgcolor: '#121a33',
     font: { color: '#dce6fb' },
-    xaxis: { gridcolor: '#263453' }, yaxis: { title: 'Indexed value ($100 start)', gridcolor: '#263453', tickprefix: '$' },
+    xaxis: { gridcolor: '#263453' },
+    yaxis: { title: 'Rebased index value ($100 start)', gridcolor: '#263453', tickprefix: '$' },
     legend: { orientation: 'h', y: -0.22 }, margin: { l: 60, r: 20, t: 55, b: 120 },
     hovermode: 'x unified'
-  }, {responsive: true});
+  };
 }
+
+function redraw(startIndex) {
+  const data = rebasedRows(allRows, startIndex);
+  document.getElementById('startDate').textContent = allRows[startIndex].Date;
+  Plotly.react('beneficiary', tracesFor(data, 'Beneficiary'), layout('AI Beneficiary Buckets'), {responsive: true});
+  Plotly.react('disrupted', tracesFor(data, 'Disrupted'), layout('AI Disrupted Buckets'), {responsive: true});
+}
+
 (async function main(){
   const [csv, meta] = await Promise.all([csvText('data/bucket_indexes.csv'), fetch('data/metadata.json?v=' + Date.now()).then(r => r.json())]);
-  const data = parseCSV(csv);
-  plot('beneficiary', data, 'Beneficiary', 'AI Beneficiary Buckets');
-  plot('disrupted', data, 'Disrupted', 'AI Disrupted Buckets');
-  document.getElementById('meta').innerHTML = `Source: ${meta.source}. Price field: ${meta.price_field}.<br>Range: ${meta.start_date} to ${meta.end_date}. Full-period tickers: ${meta.full_period_tickers}.<br>Partial-history excluded from main charts: ${meta.partial_history_tickers.join(', ') || 'None'}. Missing: ${meta.missing_tickers.join(', ') || 'None'}.`;
+  allRows = parseCSV(csv);
+  metaInfo = meta;
+  const slider = document.getElementById('startSlider');
+  slider.max = Math.max(0, allRows.length - 2);
+  slider.value = 0;
+  slider.disabled = false;
+  slider.addEventListener('input', e => redraw(Number(e.target.value)));
+  redraw(0);
+  document.getElementById('meta').innerHTML = `Source: ${meta.source}. Price field: ${meta.price_field}.<br>Full data range: ${meta.start_date} to ${meta.end_date}. Full-period tickers: ${meta.full_period_tickers}.<br>Partial-history excluded from main charts: ${meta.partial_history_tickers.join(', ') || 'None'}. Missing: ${meta.missing_tickers.join(', ') || 'None'}.`;
 })().catch(e => { document.body.innerHTML = '<main><h1>Error loading dashboard</h1><pre>' + e.stack + '</pre></main>'; });
 </script>
 </body>
