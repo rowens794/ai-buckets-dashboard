@@ -1,0 +1,497 @@
+{
+  "source": "Yahoo Finance via yfinance",
+  "price_field": "Adj Close (dividend/split adjusted)",
+  "start_date": "2024-04-30",
+  "end_date": "2026-04-30",
+  "valid_tickers": 138,
+  "full_period_tickers": 134,
+  "partial_history_tickers": [
+    "CRWV",
+    "IAS",
+    "NBIS",
+    "TEM"
+  ],
+  "missing_tickers": [
+    "ATGE",
+    "GCI",
+    "JNPR",
+    "LAZR",
+    "WNS"
+  ],
+  "groups": [
+    {
+      "group_id": "V2G01",
+      "category": "Beneficiary",
+      "layer": "Physical infrastructure",
+      "label": "V2G01 | Beneficiary | Physical infrastructure",
+      "requested_tickers": [
+        "VST",
+        "CEG",
+        "NRG",
+        "TLN",
+        "GEV",
+        "ETN",
+        "PWR",
+        "EME",
+        "FIX",
+        "VRT",
+        "EQIX",
+        "DLR"
+      ],
+      "included_full_period": [
+        "VST",
+        "CEG",
+        "NRG",
+        "TLN",
+        "GEV",
+        "ETN",
+        "PWR",
+        "EME",
+        "FIX",
+        "VRT",
+        "EQIX",
+        "DLR"
+      ],
+      "partial_history": [],
+      "missing": []
+    },
+    {
+      "group_id": "V2G02",
+      "category": "Beneficiary",
+      "layer": "Semiconductors & hardware",
+      "label": "V2G02 | Beneficiary | Semiconductors & hardware",
+      "requested_tickers": [
+        "NVDA",
+        "AMD",
+        "AVGO",
+        "MRVL",
+        "ASML",
+        "AMAT",
+        "KLAC",
+        "LRCX",
+        "MU",
+        "TSM",
+        "ARM",
+        "SMCI"
+      ],
+      "included_full_period": [
+        "NVDA",
+        "AMD",
+        "AVGO",
+        "MRVL",
+        "ASML",
+        "AMAT",
+        "KLAC",
+        "LRCX",
+        "MU",
+        "TSM",
+        "ARM",
+        "SMCI"
+      ],
+      "partial_history": [],
+      "missing": []
+    },
+    {
+      "group_id": "V2G03",
+      "category": "Beneficiary",
+      "layer": "Cloud & compute infrastructure",
+      "label": "V2G03 | Beneficiary | Cloud & compute infrastructure",
+      "requested_tickers": [
+        "ORCL",
+        "NET",
+        "CRWV",
+        "NBIS",
+        "CLS",
+        "DELL",
+        "HPE",
+        "PSTG",
+        "WDC",
+        "STX"
+      ],
+      "included_full_period": [
+        "ORCL",
+        "NET",
+        "CLS",
+        "DELL",
+        "HPE",
+        "PSTG",
+        "WDC",
+        "STX"
+      ],
+      "partial_history": [
+        "CRWV",
+        "NBIS"
+      ],
+      "missing": []
+    },
+    {
+      "group_id": "V2G04",
+      "category": "Beneficiary",
+      "layer": "Networking & connectivity",
+      "label": "V2G04 | Beneficiary | Networking & connectivity",
+      "requested_tickers": [
+        "CSCO",
+        "ANET",
+        "COHR",
+        "LITE",
+        "VIAV",
+        "CIEN",
+        "NOK",
+        "ERIC",
+        "JNPR",
+        "ALAB",
+        "FN"
+      ],
+      "included_full_period": [
+        "CSCO",
+        "ANET",
+        "COHR",
+        "LITE",
+        "VIAV",
+        "CIEN",
+        "NOK",
+        "ERIC",
+        "ALAB",
+        "FN"
+      ],
+      "partial_history": [],
+      "missing": [
+        "JNPR"
+      ]
+    },
+    {
+      "group_id": "V2G05",
+      "category": "Beneficiary",
+      "layer": "Public AI platforms / foundation-adjacent",
+      "label": "V2G05 | Beneficiary | Public AI platforms / foundation-adjacent",
+      "requested_tickers": [
+        "AI",
+        "SOUN",
+        "BBAI",
+        "RDDT",
+        "TEM"
+      ],
+      "included_full_period": [
+        "AI",
+        "SOUN",
+        "BBAI",
+        "RDDT"
+      ],
+      "partial_history": [
+        "TEM"
+      ],
+      "missing": []
+    },
+    {
+      "group_id": "V2G06",
+      "category": "Beneficiary",
+      "layer": "Data & MLOps",
+      "label": "V2G06 | Beneficiary | Data & MLOps",
+      "requested_tickers": [
+        "SNOW",
+        "MDB",
+        "DDOG",
+        "CFLT",
+        "ESTC",
+        "GTLB",
+        "DT",
+        "IOT"
+      ],
+      "included_full_period": [
+        "SNOW",
+        "MDB",
+        "DDOG",
+        "CFLT",
+        "ESTC",
+        "GTLB",
+        "DT",
+        "IOT"
+      ],
+      "partial_history": [],
+      "missing": []
+    },
+    {
+      "group_id": "V2G07",
+      "category": "Beneficiary",
+      "layer": "AI-enabled vertical apps",
+      "label": "V2G07 | Beneficiary | AI-enabled vertical apps",
+      "requested_tickers": [
+        "PLTR",
+        "PATH",
+        "VEEV",
+        "DOCS",
+        "DUOL",
+        "APPF",
+        "VERX",
+        "PAYC"
+      ],
+      "included_full_period": [
+        "PLTR",
+        "PATH",
+        "VEEV",
+        "DOCS",
+        "DUOL",
+        "APPF",
+        "VERX",
+        "PAYC"
+      ],
+      "partial_history": [],
+      "missing": []
+    },
+    {
+      "group_id": "V2G08",
+      "category": "Beneficiary",
+      "layer": "Robotics & physical AI",
+      "label": "V2G08 | Beneficiary | Robotics & physical AI",
+      "requested_tickers": [
+        "ABBNY",
+        "ROK",
+        "ISRG",
+        "MBLY",
+        "SYM",
+        "TER",
+        "CGNX",
+        "OUST",
+        "LAZR",
+        "SERV"
+      ],
+      "included_full_period": [
+        "ABBNY",
+        "ROK",
+        "ISRG",
+        "MBLY",
+        "SYM",
+        "TER",
+        "CGNX",
+        "OUST",
+        "SERV"
+      ],
+      "partial_history": [],
+      "missing": [
+        "LAZR"
+      ]
+    },
+    {
+      "group_id": "V2G09",
+      "category": "Disrupted",
+      "layer": "Legacy SaaS / seat-based software",
+      "label": "V2G09 | Disrupted | Legacy SaaS / seat-based software",
+      "requested_tickers": [
+        "CRM",
+        "ADBE",
+        "WDAY",
+        "HUBS",
+        "ZM",
+        "DOCU",
+        "ASAN",
+        "MNDY",
+        "TEAM",
+        "BOX"
+      ],
+      "included_full_period": [
+        "CRM",
+        "ADBE",
+        "WDAY",
+        "HUBS",
+        "ZM",
+        "DOCU",
+        "ASAN",
+        "MNDY",
+        "TEAM",
+        "BOX"
+      ],
+      "partial_history": [],
+      "missing": []
+    },
+    {
+      "group_id": "V2G10",
+      "category": "Disrupted",
+      "layer": "IT services & outsourcing",
+      "label": "V2G10 | Disrupted | IT services & outsourcing",
+      "requested_tickers": [
+        "ACN",
+        "CTSH",
+        "WIT",
+        "INFY",
+        "EPAM",
+        "GLOB",
+        "DXC",
+        "EXLS",
+        "WNS",
+        "TTEC"
+      ],
+      "included_full_period": [
+        "ACN",
+        "CTSH",
+        "WIT",
+        "INFY",
+        "EPAM",
+        "GLOB",
+        "DXC",
+        "EXLS",
+        "TTEC"
+      ],
+      "partial_history": [],
+      "missing": [
+        "WNS"
+      ]
+    },
+    {
+      "group_id": "V2G11",
+      "category": "Disrupted",
+      "layer": "Professional services / staffing",
+      "label": "V2G11 | Disrupted | Professional services / staffing",
+      "requested_tickers": [
+        "MAN",
+        "KFRC",
+        "RHI",
+        "KFY",
+        "BBSI",
+        "NSP",
+        "HURN",
+        "CRAI",
+        "HQI",
+        "TBI"
+      ],
+      "included_full_period": [
+        "MAN",
+        "KFRC",
+        "RHI",
+        "KFY",
+        "BBSI",
+        "NSP",
+        "HURN",
+        "CRAI",
+        "HQI",
+        "TBI"
+      ],
+      "partial_history": [],
+      "missing": []
+    },
+    {
+      "group_id": "V2G12",
+      "category": "Disrupted",
+      "layer": "Digital advertising & search-adjacent",
+      "label": "V2G12 | Disrupted | Digital advertising & search-adjacent",
+      "requested_tickers": [
+        "TTD",
+        "IAS",
+        "DV",
+        "ROKU",
+        "PINS",
+        "SNAP",
+        "YELP",
+        "GCI"
+      ],
+      "included_full_period": [
+        "TTD",
+        "DV",
+        "ROKU",
+        "PINS",
+        "SNAP",
+        "YELP"
+      ],
+      "partial_history": [
+        "IAS"
+      ],
+      "missing": [
+        "GCI"
+      ]
+    },
+    {
+      "group_id": "V2G13",
+      "category": "Disrupted",
+      "layer": "Content & media",
+      "label": "V2G13 | Disrupted | Content & media",
+      "requested_tickers": [
+        "NYT",
+        "WBD",
+        "PSKY",
+        "NWS",
+        "IAC",
+        "ZD",
+        "GTN",
+        "SSP",
+        "SCHL",
+        "TGNA"
+      ],
+      "included_full_period": [
+        "NYT",
+        "WBD",
+        "PSKY",
+        "NWS",
+        "IAC",
+        "ZD",
+        "GTN",
+        "SSP",
+        "SCHL",
+        "TGNA"
+      ],
+      "partial_history": [],
+      "missing": []
+    },
+    {
+      "group_id": "V2G14",
+      "category": "Disrupted",
+      "layer": "Online education & credentialing",
+      "label": "V2G14 | Disrupted | Online education & credentialing",
+      "requested_tickers": [
+        "CHGG",
+        "UDMY",
+        "LRN",
+        "COUR",
+        "STRA",
+        "LINC",
+        "ATGE",
+        "LAUR",
+        "PRDO",
+        "AFYA"
+      ],
+      "included_full_period": [
+        "CHGG",
+        "UDMY",
+        "LRN",
+        "COUR",
+        "STRA",
+        "LINC",
+        "LAUR",
+        "PRDO",
+        "AFYA"
+      ],
+      "partial_history": [],
+      "missing": [
+        "ATGE"
+      ]
+    },
+    {
+      "group_id": "V2G15",
+      "category": "Disrupted",
+      "layer": "Legal, compliance & information services",
+      "label": "V2G15 | Disrupted | Legal, compliance & information services",
+      "requested_tickers": [
+        "TRI",
+        "FICO",
+        "BILL",
+        "DFIN",
+        "EFX",
+        "WK",
+        "RELX",
+        "MCO",
+        "SPGI"
+      ],
+      "included_full_period": [
+        "TRI",
+        "FICO",
+        "BILL",
+        "DFIN",
+        "EFX",
+        "WK",
+        "RELX",
+        "MCO",
+        "SPGI"
+      ],
+      "partial_history": [],
+      "missing": []
+    }
+  ]
+}
