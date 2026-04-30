@@ -88,7 +88,7 @@ function tracesFor(data, category, divId) {
       name,
       customdata: data.map(() => tickers),
       visible: visibilityState[divId][name] ?? true,
-      hovertemplate: '<b>%{x}</b><br>%{fullData.name}<br>Tickers: %{customdata}<extra></extra>'
+      hovertemplate: '<b>%{x}</b><br>%{fullData.name}<br>Index: $%{y:.1f}<br>Tickers: %{customdata}<extra></extra>'
     };
   });
 }
