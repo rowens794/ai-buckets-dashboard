@@ -50,6 +50,7 @@ function parseCSV(text) {
 }
 let allRows = [];
 let metaInfo = {};
+const visibilityState = { beneficiary: {}, disrupted: {} };
 
 function rebasedRows(data, startIndex) {
   const cols = Object.keys(data[0]).filter(c => c !== 'Date');
@@ -70,15 +71,19 @@ function rebasedRows(data, startIndex) {
   });
 }
 
-function tracesFor(data, category) {
+function tracesFor(data, category, divId) {
   const cols = Object.keys(data[0]).filter(c => c.includes(`| ${category} |`));
-  return cols.map(c => ({
-    x: data.map(r => r.Date),
-    y: data.map(r => r[c]),
-    mode: 'lines',
-    name: c.replace(/^V2G\d+ \| /,''),
-    hovertemplate: '%{x}<br>%{fullData.name}: $%{y:.1f}<extra></extra>'
-  }));
+  return cols.map(c => {
+    const name = c.replace(/^V2G\d+ \| /,'');
+    return {
+      x: data.map(r => r.Date),
+      y: data.map(r => r[c]),
+      mode: 'lines',
+      name,
+      visible: visibilityState[divId][name] ?? true,
+      hovertemplate: '%{x}<br>%{fullData.name}: $%{y:.1f}<extra></extra>'
+    };
+  });
 }
 
 function layout(title) {
@@ -93,11 +98,33 @@ function layout(title) {
   };
 }
 
+function captureVisibility(divId) {
+  const el = document.getElementById(divId);
+  if (!el || !el.data) return;
+  for (const trace of el.data) {
+    visibilityState[divId][trace.name] = trace.visible === undefined ? true : trace.visible;
+  }
+}
+
+function captureAllVisibility() {
+  captureVisibility('beneficiary');
+  captureVisibility('disrupted');
+}
+
+function wireLegendPersistence(divId) {
+  const el = document.getElementById(divId);
+  el.on('plotly_legendclick', () => setTimeout(() => captureVisibility(divId), 0));
+  el.on('plotly_legenddoubleclick', () => setTimeout(() => captureVisibility(divId), 0));
+}
+
 function redraw(startIndex) {
+  captureAllVisibility();
   const data = rebasedRows(allRows, startIndex);
   document.getElementById('startDate').textContent = allRows[startIndex].Date;
-  Plotly.react('beneficiary', tracesFor(data, 'Beneficiary'), layout('AI Beneficiary Buckets'), {responsive: true});
-  Plotly.react('disrupted', tracesFor(data, 'Disrupted'), layout('AI Disrupted Buckets'), {responsive: true});
+  Plotly.react('beneficiary', tracesFor(data, 'Beneficiary', 'beneficiary'), layout('AI Beneficiary Buckets'), {responsive: true});
+  Plotly.react('disrupted', tracesFor(data, 'Disrupted', 'disrupted'), layout('AI Disrupted Buckets'), {responsive: true});
+  wireLegendPersistence('beneficiary');
+  wireLegendPersistence('disrupted');
 }
 
 (async function main(){
