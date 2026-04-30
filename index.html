@@ -50,6 +50,7 @@ function parseCSV(text) {
 }
 let allRows = [];
 let metaInfo = {};
+let tickerMap = {};
 const visibilityState = { beneficiary: {}, disrupted: {} };
 
 function rebasedRows(data, startIndex) {
@@ -71,17 +72,23 @@ function rebasedRows(data, startIndex) {
   });
 }
 
+function displayName(label) {
+  return label.replace(/^V2G\d+ \| (Beneficiary|Disrupted) \| /, '');
+}
+
 function tracesFor(data, category, divId) {
   const cols = Object.keys(data[0]).filter(c => c.includes(`| ${category} |`));
   return cols.map(c => {
-    const name = c.replace(/^V2G\d+ \| /,'');
+    const name = displayName(c);
+    const tickers = tickerMap[c] || '';
     return {
       x: data.map(r => r.Date),
       y: data.map(r => r[c]),
       mode: 'lines',
       name,
+      customdata: data.map(() => tickers),
       visible: visibilityState[divId][name] ?? true,
-      hovertemplate: '%{x}<br>%{fullData.name}: $%{y:.1f}<extra></extra>'
+      hovertemplate: '%{x}<br><b>%{fullData.name}</b>: $%{y:.1f}<br>Tickers: %{customdata}<extra></extra>'
     };
   });
 }
@@ -131,6 +138,7 @@ function redraw(startIndex) {
   const [csv, meta] = await Promise.all([csvText('data/bucket_indexes.csv'), fetch('data/metadata.json?v=' + Date.now()).then(r => r.json())]);
   allRows = parseCSV(csv);
   metaInfo = meta;
+  tickerMap = Object.fromEntries(meta.groups.map(g => [g.label, (g.included_full_period || []).join(', ')]));
   const slider = document.getElementById('startSlider');
   slider.max = Math.max(0, allRows.length - 2);
   slider.value = 0;
