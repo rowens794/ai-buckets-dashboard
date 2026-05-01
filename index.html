@@ -34,7 +34,29 @@
   <div class="card meta" id="meta">Loading metadata…</div>
 </main>
 <script>
-async function csvText(url) { const r = await fetch(url + '?v=' + Date.now()); if (!r.ok) throw new Error(url); return r.text(); }
+async function fetchText(url) { const r = await fetch(url + (url.includes('?') ? '&' : '?') + 'v=' + Date.now()); if (!r.ok) throw new Error(url); return r.text(); }
+async function fetchJson(url) { return JSON.parse(await fetchText(url)); }
+async function loadDashboardData() {
+  let config = {};
+  try { config = await fetchJson('data/runtime_config.json'); } catch (_) {}
+  const base = (config.r2_public_base_url || '').replace(/\/$/, '');
+  if (base) {
+    try {
+      const [csv, meta] = await Promise.all([
+        fetchText(`${base}/latest/bucket_indexes.csv`),
+        fetchJson(`${base}/latest/metadata.json`)
+      ]);
+      return { csv, meta, sourceLabel: 'Cloudflare R2 latest snapshot' };
+    } catch (err) {
+      console.warn('R2 latest snapshot unavailable; falling back to GitHub Pages data.', err);
+    }
+  }
+  const [csv, meta] = await Promise.all([
+    fetchText('data/bucket_indexes.csv'),
+    fetchJson('data/metadata.json')
+  ]);
+  return { csv, meta, sourceLabel: 'GitHub Pages bundled data' };
+}
 function parseCSV(text) {
   const rows = []; let row = [], cur = '', q = false;
   for (let i=0;i<text.length;i++) { const c=text[i], n=text[i+1];
@@ -135,7 +157,7 @@ function redraw(startIndex) {
 }
 
 (async function main(){
-  const [csv, meta] = await Promise.all([csvText('data/bucket_indexes.csv'), fetch('data/metadata.json?v=' + Date.now()).then(r => r.json())]);
+  const { csv, meta, sourceLabel } = await loadDashboardData();
   allRows = parseCSV(csv);
   metaInfo = meta;
   tickerMap = Object.fromEntries(meta.groups.map(g => [g.label, (g.included_full_period || []).join(', ')]));
@@ -145,7 +167,7 @@ function redraw(startIndex) {
   slider.disabled = false;
   slider.addEventListener('input', e => redraw(Number(e.target.value)));
   redraw(0);
-  document.getElementById('meta').innerHTML = `Source: ${meta.source}. Price field: ${meta.price_field}.<br>Full data range: ${meta.start_date} to ${meta.end_date}. Full-period tickers: ${meta.full_period_tickers}.<br>Partial-history excluded from main charts: ${meta.partial_history_tickers.join(', ') || 'None'}. Missing: ${meta.missing_tickers.join(', ') || 'None'}.`;
+  document.getElementById('meta').innerHTML = `Source: ${meta.source}. Data file: ${sourceLabel}. Price field: ${meta.price_field}.<br>Full data range: ${meta.start_date} to ${meta.end_date}. Full-period tickers: ${meta.full_period_tickers}.<br>Partial-history excluded from main charts: ${meta.partial_history_tickers.join(', ') || 'None'}. Missing: ${meta.missing_tickers.join(', ') || 'None'}.`;
 })().catch(e => { document.body.innerHTML = '<main><h1>Error loading dashboard</h1><pre>' + e.stack + '</pre></main>'; });
 </script>
 </body>
