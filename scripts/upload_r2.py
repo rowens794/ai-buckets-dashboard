@@ -42,11 +42,35 @@ s3 = boto3.client(
     region_name="auto",
 )
 
+def ensure_public_read_cors() -> None:
+    # Required so the GitHub Pages app can fetch public r2.dev objects in-browser.
+    try:
+        s3.put_bucket_cors(
+            Bucket=bucket,
+            CORSConfiguration={
+                "CORSRules": [
+                    {
+                        "AllowedOrigins": ["*"],
+                        "AllowedMethods": ["GET", "HEAD"],
+                        "AllowedHeaders": ["*"],
+                        "ExposeHeaders": ["ETag"],
+                        "MaxAgeSeconds": 300,
+                    }
+                ]
+            },
+        )
+        print("R2 bucket CORS configured for public browser reads")
+    except Exception as exc:
+        print(f"Warning: could not configure R2 CORS automatically: {exc}")
+
+
 def upload(local: Path, key: str) -> None:
     content_type = mimetypes.guess_type(local.name)[0] or "application/octet-stream"
     extra = {"ContentType": content_type, "CacheControl": "public, max-age=60"}
     s3.upload_file(str(local), bucket, key, ExtraArgs=extra)
     print(f"uploaded s3://{bucket}/{key}")
+
+ensure_public_read_cors()
 
 files = [
     (DATA / "bucket_indexes.csv", "bucket_indexes.csv"),
