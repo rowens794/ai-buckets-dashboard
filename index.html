@@ -17,7 +17,19 @@
     .controls label { font-weight: 650; }
     .controls input[type=range] { width: 100%; }
     .pill { display: inline-block; background: #203052; border: 1px solid #33476f; color: #e8eefc; padding: 4px 9px; border-radius: 999px; }
+    .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+    .stat { background: #121a33; border: 1px solid #263453; border-radius: 16px; padding: 14px; }
+    .stat .label { color: #aab6d3; font-size: 13px; }
+    .stat .value { font-size: 24px; font-weight: 750; margin-top: 4px; }
+    .pos { color: #6ee7a8; } .neg { color: #ff8e8e; } .neutral { color: #dce6fb; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { border-bottom: 1px solid #263453; padding: 9px 8px; text-align: right; vertical-align: top; }
+    th:first-child, td:first-child { text-align: left; }
+    th { color: #aab6d3; font-weight: 700; position: sticky; top: 0; background: #121a33; }
+    .table-wrap { max-height: 560px; overflow: auto; }
+    .small { font-size: 12px; color: #aab6d3; line-height: 1.3; }
     a { color: #8ab4ff; }
+    @media (max-width: 850px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   </style>
 </head>
 <body>
@@ -28,6 +40,12 @@
     <label for="startSlider">Start / rebasing date: <span id="startDate" class="pill">Loading…</span></label>
     <input id="startSlider" type="range" min="0" max="0" value="0" step="1" disabled />
     <div class="meta">Tip: move the slider right to compare returns from a more recent date. The chart automatically rebases all buckets to $100 at the selected start date.</div>
+  </div>
+  <div class="grid" id="summaryStats"></div>
+  <div class="card"><div id="spread" class="chart" style="height: 430px;"></div></div>
+  <div class="card">
+    <h2 style="margin: 4px 0 10px; font-size: 20px;">Bucket return monitor</h2>
+    <div class="table-wrap"><table id="returnsTable"></table></div>
   </div>
   <div class="card"><div id="beneficiary" class="chart"></div></div>
   <div class="card"><div id="disrupted" class="chart"></div></div>
@@ -115,6 +133,70 @@ function tracesFor(data, category, divId) {
   });
 }
 
+function pct(v) { return Number.isFinite(v) ? `${v >= 0 ? '+' : ''}${v.toFixed(1)}%` : 'n/a'; }
+function cls(v) { return !Number.isFinite(v) ? 'neutral' : v > 0 ? 'pos' : v < 0 ? 'neg' : 'neutral'; }
+function valueAtOrBefore(rows, idx, col) {
+  for (let i = Math.min(idx, rows.length - 1); i >= 0; i--) {
+    const v = Number(rows[i][col]);
+    if (Number.isFinite(v) && v > 0) return v;
+  }
+  return NaN;
+}
+function returnBetween(rows, startIdx, endIdx, col) {
+  const a = valueAtOrBefore(rows, startIdx, col), b = valueAtOrBefore(rows, endIdx, col);
+  return Number.isFinite(a) && Number.isFinite(b) ? (b / a - 1) * 100 : NaN;
+}
+function tradingDays(n) { return Math.max(0, allRows.length - 1 - n); }
+function categoryCols(category) { return Object.keys(allRows[0]).filter(c => c.includes(`| ${category} |`)); }
+function averageValue(row, cols) {
+  const vals = cols.map(c => Number(row[c])).filter(Number.isFinite);
+  return vals.length ? vals.reduce((a,b)=>a+b,0) / vals.length : NaN;
+}
+function aggregateSeries(cols) {
+  return allRows.map(r => averageValue(r, cols));
+}
+function rebasedSeries(series, startIndex) {
+  let base = NaN;
+  for (let i=startIndex; i<series.length; i++) { if (Number.isFinite(series[i]) && series[i] > 0) { base = series[i]; break; } }
+  return series.slice(startIndex).map(v => Number.isFinite(v) && base ? (v / base) * 100 : null);
+}
+function updateSignals(startIndex) {
+  const endIdx = allRows.length - 1;
+  const bCols = categoryCols('Beneficiary'), dCols = categoryCols('Disrupted');
+  const bSeries = aggregateSeries(bCols), dSeries = aggregateSeries(dCols);
+  const rb = rebasedSeries(bSeries, startIndex), rd = rebasedSeries(dSeries, startIndex);
+  const x = allRows.slice(startIndex).map(r => r.Date);
+  const spread = rb.map((v,i) => Number.isFinite(v) && Number.isFinite(rd[i]) ? v - rd[i] : null);
+  Plotly.react('spread', [
+    {x, y: rb, mode: 'lines', name: 'Beneficiaries avg', line: {color: '#6ee7a8'}, hovertemplate: '<b>%{x}</b><br>Beneficiaries avg: $%{y:.1f}<extra></extra>'},
+    {x, y: rd, mode: 'lines', name: 'Disrupted avg', line: {color: '#ff8e8e'}, hovertemplate: '<b>%{x}</b><br>Disrupted avg: $%{y:.1f}<extra></extra>'},
+    {x, y: spread, mode: 'lines', name: 'Spread', yaxis: 'y2', line: {color: '#8ab4ff', dash: 'dot'}, hovertemplate: '<b>%{x}</b><br>Spread: %{y:.1f} pts<extra></extra>'}
+  ], {
+    title: { text: 'Beneficiaries vs Disrupted: relative performance spread', font: { color: '#e8eefc' } },
+    paper_bgcolor: '#121a33', plot_bgcolor: '#121a33', font: { color: '#dce6fb' },
+    xaxis: { gridcolor: '#263453' }, yaxis: { title: 'Rebased index', gridcolor: '#263453', tickprefix: '$' },
+    yaxis2: { title: 'Spread pts', overlaying: 'y', side: 'right', gridcolor: '#263453' },
+    legend: { orientation: 'h', y: -0.2 }, margin: { l: 60, r: 60, t: 55, b: 90 }, hovermode: 'closest'
+  }, {responsive: true});
+
+  const rows = Object.keys(allRows[0]).filter(c => c !== 'Date').map(col => {
+    const retStart = returnBetween(allRows, startIndex, endIdx, col);
+    return { col, name: displayName(col), category: col.includes('| Beneficiary |') ? 'Beneficiary' : 'Disrupted',
+      oneD: returnBetween(allRows, tradingDays(1), endIdx, col), oneW: returnBetween(allRows, tradingDays(5), endIdx, col),
+      oneM: returnBetween(allRows, tradingDays(21), endIdx, col), threeM: returnBetween(allRows, tradingDays(63), endIdx, col),
+      since: retStart, index: valueAtOrBefore(allRows, endIdx, col), tickers: tickerMap[col] || '' };
+  }).sort((a,b) => (b.since||-999) - (a.since||-999));
+  const top = rows[0], bottom = rows[rows.length-1];
+  const benRet = rb.length ? rb[rb.length-1] - 100 : NaN;
+  const disRet = rd.length ? rd[rd.length-1] - 100 : NaN;
+  const sp = spread.length ? spread[spread.length-1] : NaN;
+  document.getElementById('summaryStats').innerHTML = [
+    ['Beneficiary avg', pct(benRet), benRet], ['Disrupted avg', pct(disRet), disRet],
+    ['Spread', Number.isFinite(sp) ? `${sp.toFixed(1)} pts` : 'n/a', sp], ['Top bucket', `${top.name}<br><span class="small">${pct(top.since)}</span>`, top.since]
+  ].map(([label,value,v]) => `<div class="stat"><div class="label">${label}</div><div class="value ${cls(v)}">${value}</div></div>`).join('');
+  document.getElementById('returnsTable').innerHTML = `<thead><tr><th>Bucket</th><th>Type</th><th>Index</th><th>1D</th><th>1W</th><th>1M</th><th>3M</th><th>Since slider</th><th>Tickers</th></tr></thead><tbody>${rows.map(r => `<tr><td>${r.name}</td><td>${r.category}</td><td>$${r.index.toFixed(1)}</td><td class="${cls(r.oneD)}">${pct(r.oneD)}</td><td class="${cls(r.oneW)}">${pct(r.oneW)}</td><td class="${cls(r.oneM)}">${pct(r.oneM)}</td><td class="${cls(r.threeM)}">${pct(r.threeM)}</td><td class="${cls(r.since)}">${pct(r.since)}</td><td class="small">${r.tickers}</td></tr>`).join('')}</tbody>`;
+}
+
 function layout(title) {
   return {
     title: { text: title, font: { color: '#e8eefc' } },
@@ -152,6 +234,7 @@ function redraw(startIndex) {
   document.getElementById('startDate').textContent = allRows[startIndex].Date;
   Plotly.react('beneficiary', tracesFor(data, 'Beneficiary', 'beneficiary'), layout('AI Beneficiary Buckets'), {responsive: true});
   Plotly.react('disrupted', tracesFor(data, 'Disrupted', 'disrupted'), layout('AI Disrupted Buckets'), {responsive: true});
+  updateSignals(startIndex);
   wireLegendPersistence('beneficiary');
   wireLegendPersistence('disrupted');
 }
