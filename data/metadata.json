@@ -1,10 +1,10 @@
 {
   "source": "Yahoo Finance via yfinance",
   "price_field": "Adj Close (dividend/split adjusted)",
-  "start_date": "2024-05-22",
-  "end_date": "2026-05-21",
-  "valid_tickers": 137,
-  "full_period_tickers": 133,
+  "start_date": "2024-05-23",
+  "end_date": "2026-05-22",
+  "valid_tickers": 136,
+  "full_period_tickers": 132,
   "partial_history_tickers": [
     "CRWV",
     "IAS",
@@ -17,6 +17,7 @@
     "GCI",
     "JNPR",
     "LAZR",
+    "TGNA",
     "WNS"
   ],
   "groups": [
@@ -426,11 +427,12 @@
         "ZD",
         "GTN",
         "SSP",
-        "SCHL",
-        "TGNA"
+        "SCHL"
       ],
       "partial_history": [],
-      "missing": []
+      "missing": [
+        "TGNA"
+      ]
     },
     {
       "group_id": "V2G14",
