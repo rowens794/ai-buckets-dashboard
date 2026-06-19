@@ -3,8 +3,8 @@
   "price_field": "Adj Close (dividend/split adjusted)",
   "start_date": "2024-06-20",
   "end_date": "2026-06-18",
-  "valid_tickers": 136,
-  "full_period_tickers": 133,
+  "valid_tickers": 135,
+  "full_period_tickers": 132,
   "partial_history_tickers": [
     "CRWV",
     "IAS",
@@ -16,6 +16,7 @@
     "GCI",
     "JNPR",
     "LAZR",
+    "PSTG",
     "TGNA",
     "WNS"
   ],
@@ -115,7 +116,6 @@
         "CLS",
         "DELL",
         "HPE",
-        "PSTG",
         "WDC",
         "STX"
       ],
@@ -123,7 +123,9 @@
         "CRWV",
         "NBIS"
       ],
-      "missing": []
+      "missing": [
+        "PSTG"
+      ]
     },
     {
       "group_id": "V2G04",
