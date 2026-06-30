@@ -2,12 +2,13 @@
   "source": "Yahoo Finance via yfinance",
   "price_field": "Adj Close (dividend/split adjusted)",
   "start_date": "2024-07-01",
-  "end_date": "2026-06-29",
-  "valid_tickers": 135,
+  "end_date": "2026-06-30",
+  "valid_tickers": 136,
   "full_period_tickers": 132,
   "partial_history_tickers": [
     "CRWV",
     "IAS",
+    "LAZR",
     "NBIS"
   ],
   "missing_tickers": [
@@ -15,7 +16,6 @@
     "CFLT",
     "GCI",
     "JNPR",
-    "LAZR",
     "PSTG",
     "TGNA",
     "WNS"
@@ -269,10 +269,10 @@
         "OUST",
         "SERV"
       ],
-      "partial_history": [],
-      "missing": [
+      "partial_history": [
         "LAZR"
-      ]
+      ],
+      "missing": []
     },
     {
       "group_id": "V2G09",
