@@ -1,12 +1,13 @@
 {
   "source": "Yahoo Finance via yfinance",
   "price_field": "Adj Close (dividend/split adjusted)",
-  "start_date": "2024-07-18",
-  "end_date": "2026-07-17",
-  "valid_tickers": 134,
+  "start_date": "2024-07-22",
+  "end_date": "2026-07-20",
+  "valid_tickers": 135,
   "full_period_tickers": 130,
   "partial_history_tickers": [
     "CRWV",
+    "IAC",
     "IAS",
     "LAZR",
     "NBIS"
@@ -15,7 +16,6 @@
     "ATGE",
     "CFLT",
     "GCI",
-    "IAC",
     "JNPR",
     "PSTG",
     "TGNA",
@@ -430,9 +430,10 @@
         "SSP",
         "SCHL"
       ],
-      "partial_history": [],
+      "partial_history": [
+        "IAC"
+      ],
       "missing": [
-        "IAC",
         "TGNA"
       ]
     },
