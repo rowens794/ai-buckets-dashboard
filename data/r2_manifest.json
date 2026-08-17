@@ -1,10 +1,10 @@
 {
-  "latest_date": "2026-08-14",
+  "latest_date": "2026-08-17",
   "latest": {
     "bucket_indexes_csv": "latest/bucket_indexes.csv",
     "metadata_json": "latest/metadata.json",
     "runtime_config_json": "latest/runtime_config.json"
   },
   "history_prefix": "history/",
-  "updated_at": "2026-08-14T22:51:56.824606+00:00"
+  "updated_at": "2026-08-17T22:52:10.228567+00:00"
 }
