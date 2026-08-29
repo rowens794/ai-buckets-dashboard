@@ -1,8 +1,8 @@
 {
   "source": "Yahoo Finance via yfinance",
   "price_field": "Adj Close (dividend/split adjusted)",
-  "start_date": "2024-08-28",
-  "end_date": "2026-08-27",
+  "start_date": "2024-08-29",
+  "end_date": "2026-08-28",
   "valid_tickers": 134,
   "full_period_tickers": 130,
   "partial_history_tickers": [
