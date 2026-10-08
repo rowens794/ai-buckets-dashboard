@@ -1,16 +1,17 @@
 {
   "source": "Yahoo Finance via yfinance",
   "price_field": "Adj Close (dividend/split adjusted)",
-  "start_date": "2024-10-07",
-  "end_date": "2026-10-06",
+  "start_date": "2024-10-08",
+  "end_date": "2026-10-07",
   "valid_tickers": 134,
-  "full_period_tickers": 129,
+  "full_period_tickers": 128,
   "partial_history_tickers": [
     "CRWV",
     "IAS",
     "LAZR",
     "NBIS",
-    "PSKY"
+    "PSKY",
+    "WBD"
   ],
   "missing_tickers": [
     "ATGE",
@@ -423,7 +424,6 @@
       ],
       "included_full_period": [
         "NYT",
-        "WBD",
         "NWS",
         "ZD",
         "GTN",
@@ -431,6 +431,7 @@
         "SCHL"
       ],
       "partial_history": [
+        "WBD",
         "PSKY"
       ],
       "missing": [
