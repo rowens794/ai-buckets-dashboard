@@ -3,13 +3,14 @@
   "price_field": "Adj Close (dividend/split adjusted)",
   "start_date": "2024-10-14",
   "end_date": "2026-10-12",
-  "valid_tickers": 133,
+  "valid_tickers": 134,
   "full_period_tickers": 128,
   "partial_history_tickers": [
     "CRWV",
     "IAS",
     "LAZR",
     "NBIS",
+    "PSKY",
     "WBD"
   ],
   "missing_tickers": [
@@ -19,7 +20,6 @@
     "IAC",
     "JNPR",
     "PSTG",
-    "ROKU",
     "TGNA",
     "UDMY",
     "WNS"
@@ -393,6 +393,7 @@
       "included_full_period": [
         "TTD",
         "DV",
+        "ROKU",
         "PINS",
         "SNAP",
         "YELP"
@@ -401,7 +402,6 @@
         "IAS"
       ],
       "missing": [
-        "ROKU",
         "GCI"
       ]
     },
@@ -424,7 +424,6 @@
       ],
       "included_full_period": [
         "NYT",
-        "PSKY",
         "NWS",
         "ZD",
         "GTN",
@@ -432,7 +431,8 @@
         "SCHL"
       ],
       "partial_history": [
-        "WBD"
+        "WBD",
+        "PSKY"
       ],
       "missing": [
         "IAC",
