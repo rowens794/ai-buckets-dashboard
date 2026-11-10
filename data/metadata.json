@@ -1,15 +1,16 @@
 {
   "source": "Yahoo Finance via yfinance",
   "price_field": "Adj Close (dividend/split adjusted)",
-  "start_date": "2024-11-07",
-  "end_date": "2026-11-06",
-  "valid_tickers": 133,
+  "start_date": "2024-11-11",
+  "end_date": "2026-11-09",
+  "valid_tickers": 134,
   "full_period_tickers": 128,
   "partial_history_tickers": [
     "CRWV",
     "IAS",
     "LAZR",
     "PSKY",
+    "ROKU",
     "WBD"
   ],
   "missing_tickers": [
@@ -19,7 +20,6 @@
     "IAC",
     "JNPR",
     "PSTG",
-    "TEM",
     "TGNA",
     "UDMY",
     "WNS"
@@ -182,12 +182,11 @@
         "AI",
         "SOUN",
         "BBAI",
-        "RDDT"
+        "RDDT",
+        "TEM"
       ],
       "partial_history": [],
-      "missing": [
-        "TEM"
-      ]
+      "missing": []
     },
     {
       "group_id": "V2G06",
@@ -394,13 +393,13 @@
       "included_full_period": [
         "TTD",
         "DV",
-        "ROKU",
         "PINS",
         "SNAP",
         "YELP"
       ],
       "partial_history": [
-        "IAS"
+        "IAS",
+        "ROKU"
       ],
       "missing": [
         "GCI"
