@@ -1,10 +1,10 @@
 {
   "source": "Yahoo Finance via yfinance",
   "price_field": "Adj Close (dividend/split adjusted)",
-  "start_date": "2024-11-20",
-  "end_date": "2026-11-19",
-  "valid_tickers": 134,
-  "full_period_tickers": 128,
+  "start_date": "2024-11-21",
+  "end_date": "2026-11-20",
+  "valid_tickers": 133,
+  "full_period_tickers": 127,
   "partial_history_tickers": [
     "CRWV",
     "IAS",
@@ -17,6 +17,7 @@
     "ATGE",
     "CFLT",
     "GCI",
+    "HQI",
     "IAC",
     "JNPR",
     "PSTG",
@@ -369,11 +370,12 @@
         "NSP",
         "HURN",
         "CRAI",
-        "HQI",
         "TBI"
       ],
       "partial_history": [],
-      "missing": []
+      "missing": [
+        "HQI"
+      ]
     },
     {
       "group_id": "V2G12",
